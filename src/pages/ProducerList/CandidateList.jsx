@@ -536,7 +536,7 @@ export default class CandidateList extends Component {
     return (
       <div sytle={styles.all}>
         <IceContainer style={styles.banner}/>
-        <IceContainer style={{...styles.table, width: '78%', height: '317px', margin: '-290px 11% 20px 11%' }}>
+        <IceContainer style={{...styles.table, width: '78%', height: '80%', margin: '-290px 11% 20px 11%' }}>
           <Row justify="start" align='center' style={{marginBottom: '10px'}}>
             <Button style={styles.btn} type="primary" onClick={this.updateStatus.bind(this)}>
             {T('刷新')}
