@@ -137,7 +137,7 @@ class BlockTxLayout extends Component {
             </div>
             
             <div style={styles.smallCountTitle}>
-             {T('不可逆区块高度')}
+             {T('最新区块交易量')}
             </div>
 
             <div className="count" style={styles.smallCount}>
