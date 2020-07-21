@@ -9,6 +9,8 @@ import * as oexchain from 'oex-web3';
 import * as utils from '../../../../utils/utils';
 import { T } from '../../../../utils/lang';
 import BlockList from '../../../BlockList';
+import eventProxy from '../../../../utils/eventProxy';
+
 
 const block = require('./images/middle_icon_BK.png');
 
@@ -41,34 +43,29 @@ export default class BlocksTable extends Component {
   }
 
   updateBlockInfo = () => {
+    const blockList = [];
     oexchain.oex.getCurrentBlock(false).then(async(block) => {
       if (this.state.blockList.length > 0 && block.number <= this.state.blockList[0].number) {
         return;
       }
-      this.state.blockList = [block, ...this.state.blockList];
       block['txn'] = block.transactions.length;
-      let length = this.state.blockList.length;
-      if (length < 18) {
-        const lastBlock = this.state.blockList[length - 1];
-        var startHeight = lastBlock.number - 1;
-        for (var i = startHeight; i > startHeight - (18 - length) && i >= 0; i--) {
-          var curBlockInfo = await oexchain.oex.getBlockByNum(i, false);
-          curBlockInfo['txn'] = curBlockInfo.transactions.length;
-          this.state.blockList.push(curBlockInfo);
+      blockList.push(block);
+      let nextBlockNum = block.number - 1;
+      let count = 1;
+      const len = this.state.blockList.length;
+      for (let i = 0; count < 18; i++, nextBlockNum--, count++) {
+        if (i < len && this.state.blockList[i].number == nextBlockNum) {
+          blockList.push(this.state.blockList[i]);
+          continue;
         }
-      } 
-      while (length > 18) {
-        this.state.blockList.pop();
-        length = this.state.blockList.length;
+        var curBlockInfo = await oexchain.oex.getBlockByNum(nextBlockNum, false);
+        curBlockInfo['txn'] = curBlockInfo.transactions.length;
+        blockList.push(curBlockInfo);
+        i--;
       }
 
-      // const blockList = [];
-      // var curHeight = block.number;
-      // for (var i = curHeight; i > curHeight - 18 && i >= 0; i--) {
-      //   var curBlockInfo = await oexchain.oex.getBlockByNum(i, false);
-      //   curBlockInfo['txn'] = curBlockInfo.transactions.length;
-      //   blockList.push(curBlockInfo);
-      // }
+      this.state.blockList = blockList;
+      eventProxy.trigger('updateBlocks', blockList);
       this.setState({
         blockList: this.state.blockList,
       });
@@ -131,7 +128,7 @@ export default class BlocksTable extends Component {
           >
             <Table.Column width={100} cell={this.renderHeader.bind(this)}/>
             <Table.Column title={T("高度")} dataIndex="number" width={100} cell={this.renderBlockNumber.bind(this)}/>
-            <Table.Column title={T("详情")} dataIndex="number" width={200} cell={this.renderBlockInfo.bind(this)}/>
+            <Table.Column title={T("详情")} dataIndex="timestamp" width={200} cell={this.renderBlockInfo.bind(this)}/>
             <Table.Column title={T("Gas消耗")} dataIndex="gasUsed" width={100} cell={this.renderGas.bind(this)}/>
 
             {/* <Table.Column title={T("时间")} dataIndex="timestamp" width={150} cell={this.renderTimeStamp.bind(this)}/>

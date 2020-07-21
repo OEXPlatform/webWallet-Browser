@@ -60,7 +60,7 @@ class BlockTxLayout extends Component {
       oexchain.dpos.getDposIrreversibleInfo().then(irreversibleInfo => {
         this.setState({ irreversible: irreversibleInfo });
       });
-      oexchain.dpos.getValidCandidates(0).then(latestEpchoInfo => {
+      oexchain.dpos.getNextValidCandidates().then(latestEpchoInfo => {
         this.setState({ latestEpchoInfo, activeProducers: latestEpchoInfo.activatedCandidateSchedule });
       });
       oexchain.dpos.getCandidates(0, false).then(candidates => {

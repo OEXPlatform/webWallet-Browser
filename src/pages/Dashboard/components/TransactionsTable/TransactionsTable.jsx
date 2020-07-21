@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import * as oexchain from 'oex-web3';
 
 import TransactionList from '../../../../TransactionList';
+import eventProxy from '../../../../utils/eventProxy';
 
 export default class TransactionsTable extends Component {
   static displayName = 'TransactionsTable';
@@ -20,10 +21,18 @@ export default class TransactionsTable extends Component {
   }
 
   componentDidMount() {
-    this.updateTxInfo();
-    this.state.intervalId = setInterval(() => {
-      this.updateTxInfo();
-    }, 3000);
+    eventProxy.on('updateBlocks', (blocks) => {
+      const maxTxNum = 13;
+      let txHashArr = [];
+      for (let i = 0; i < blocks.length; i++) {
+        txHashArr.push(...blocks[i].transactions);
+        if (txHashArr.length > maxTxNum) {
+          txHashArr = txHashArr.slice(0, maxTxNum);
+          break;
+        }
+      }
+      this.setState({txFrom: { txHashArr, maxTxNum, fromHomePage: true }});
+    });
   }
 
   componentWillUnmount = () => {
@@ -32,6 +41,7 @@ export default class TransactionsTable extends Component {
 
   updateTxInfo = () => {
     oexchain.oex.getCurrentBlock(false).then(async (block) => {
+
       let txNum = 0;
       var maxTxNum = 20;
       if (this.state.txHashArr.length > 0) {
@@ -45,11 +55,14 @@ export default class TransactionsTable extends Component {
         var curHeight = block.number;
         var maxLookbackNum = 20;
         
-        for (var height = curHeight; height > curHeight - maxLookbackNum && height > 0; height--) {
+        for (var height = curHeight - 1; height > curHeight - maxLookbackNum && height > 0; height--) {
           if (txNum >= maxTxNum) {
             console.log('get tx from block:' + height + '~' + curHeight);
             break;
           }
+          
+          if (this.state.savedBlockNumbers[height]) break;
+          this.state.savedBlockNumbers[block.number] = true;
           const blockInfo = await oexchain.oex.getBlockByNum(height, false);
           if (blockInfo == null || blockInfo.transactions == null) {
             continue;
