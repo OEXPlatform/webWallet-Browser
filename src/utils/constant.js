@@ -59,12 +59,12 @@ export const BlockStatus = { Rollbacked: -1, Irreversible: 0, Reversible: 1, Unk
 export const SysTokenId = 0;
 export const SysTokenDecimal = 18;
 
-export const mainNetRPCHttpsAddr = 'https://chain.eox.com/mainnet/'; 
-export const testNetRPCHttpsAddr1 = 'https://chain.eox.com/testnet1/';
+export const mainNetRPCHttpsAddr = 'http://mainnet.oexchain.io/'; 
+export const testNetRPCHttpsAddr = 'http://testnet.oexchain.io/';
 export const LocalRPCAddr = 'http://127.0.0.1:8545';
 
 // 创建账户的代理服务器
-export const proxySrvAddr = {1: 'http://47.115.150.104:9000', 100: 'http://47.115.150.104:9001', 200: 'http://47.115.150.104:9002'};
+export const proxySrvAddr = {1: 'http://oexchain.io:9000', 100: 'http://oexchain.io:9001', 200: 'http://oexchain.io:9002'};
 
 // 账户创建代理服务器会连接此RPC接口注册账户
 export const chainId2RPC = {1: {rpcHost: '47.115.136.228', rpcPort: 8080}, 100: {rpcHost: '47.115.149.93', rpcPort: 8080}, 200: {rpcHost: '47.115.150.104', rpcPort: 8202}};

@@ -45,8 +45,7 @@ export default class Header extends PureComponent {
       curLang: (defaultLang == null || defaultLang == 'ch') ? 'English' : '中文',
       defaultLang,
       nodes: [{value: constant.mainNetRPCHttpsAddr, label:T('主网：') + constant.mainNetRPCHttpsAddr}, 
-              {value: constant.testNetRPCHttpsAddr1, label:T('测试网1：') + constant.testNetRPCHttpsAddr1}, 
-              {value: constant.testNetRPCHttpsAddr2, label:T('测试网2：') + constant.testNetRPCHttpsAddr2},
+              {value: constant.testNetRPCHttpsAddr, label:T('测试网：') + constant.testNetRPCHttpsAddr}, 
               {value: constant.LocalRPCAddr, label:T('本地节点：') + constant.LocalRPCAddr}, 
               {value: 'others', label: T('自定义')}],
     };
@@ -83,7 +82,7 @@ export default class Header extends PureComponent {
     this.setState({customNodeDisabled: value != 'others', nodeInfo: value});
   }
   onConfigNodeOK = () => {
-    const nodeInfo = (this.state.nodeInfo.indexOf('http://') == 0 || this.state.nodeInfo.indexOf('https://') == 0) ? this.state.nodeInfo : 'https://' + this.state.nodeInfo;
+    const nodeInfo = (this.state.nodeInfo.indexOf('http://') == 0 || this.state.nodeInfo.indexOf('https://') == 0) ? this.state.nodeInfo : 'http://' + this.state.nodeInfo;
     cookie.save('nodeInfo', nodeInfo, {path: '/', maxAge: 3600 * 24 * 360});
     axios.defaults.baseURL = nodeInfo;
     this.setState({ nodeConfigVisible: false, nodeInfo });
@@ -223,6 +222,7 @@ export default class Header extends PureComponent {
                 placeholder={T("选择节点")}
                 onChange={this.onChangeNode.bind(this, 'nodeInfo')}
                 value={this.state.nodeInfo}
+                defaultValue={constant.testNetRPCHttpsAddr}
                 dataSource={this.state.nodes}
             />
             <br />

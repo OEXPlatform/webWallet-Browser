@@ -28,12 +28,15 @@ const store = configureStore(initialState, history);
 const ICE_CONTAINER = document.getElementById('ice-container');
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 axios.defaults.baseURL = constant.testNetRPCAddr;
-const nodeInfo = cookie.load('nodeInfo');
+
+let nodeInfo = cookie.load('nodeInfo');
 if (nodeInfo != null && nodeInfo !== '') {
   axios.defaults.baseURL = nodeInfo;
   oexchain.utils.setProvider(nodeInfo);
 } else {
-  oexchain.utils.setProvider(constant.mainNetRPCHttpsAddr);
+  nodeInfo = 'http://' + window.location.host;
+  cookie.save('nodeInfo', nodeInfo, {path: '/', maxAge: 3600 * 24 * 360});
+  oexchain.utils.setProvider(nodeInfo);
 }
 
 if (!window.localStorage) {
