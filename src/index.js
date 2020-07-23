@@ -27,7 +27,7 @@ const history = createHashHistory();
 const store = configureStore(initialState, history);
 const ICE_CONTAINER = document.getElementById('ice-container');
 axios.defaults.headers.post['Content-Type'] = 'application/json';
-axios.defaults.baseURL = constant.testNetRPCAddr;
+axios.defaults.baseURL = constant.testNetRPCHttpsAddr;
 
 let nodeInfo = cookie.load('nodeInfo');
 if (nodeInfo != null && nodeInfo !== '') {
