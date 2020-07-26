@@ -74,7 +74,7 @@ export default class TransactionList extends Component {
   processTxs = async (txInfos) => {
     const txSet = {};
     let receiptPromiseArr = [];
-    const transactions = [];
+    let transactions = [];
     const _this = this;
     for (const transaction of txInfos) {
       const internalTx = await oexchain.oex.getInternalTxByHash(transaction.txHash);
@@ -134,8 +134,8 @@ export default class TransactionList extends Component {
           }
         } 
         transactions = [...transactions, ...this.state.transactions];
+        console.log('tx num = ' + transactions.length + ', maxTxNum = ' + this.state.maxTxNum);
         if (transactions.length > this.state.maxTxNum) {
-          console.log('tx num = ' + transactions.length + ', maxTxNum = ' + this.state.maxTxNum);
           transactions = transactions.slice(0, this.state.maxTxNum);
         }
 
