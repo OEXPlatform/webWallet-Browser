@@ -31,6 +31,7 @@ export default class TransactionsTable extends Component {
           break;
         }
       }
+      console.log('1: tx num = ' + txHashArr.length);
       this.setState({txFrom: { txHashArr, maxTxNum, fromHomePage: true }});
     });
   }
@@ -39,49 +40,8 @@ export default class TransactionsTable extends Component {
     clearInterval(this.state.intervalId);
   }
 
-  updateTxInfo = () => {
-    oexchain.oex.getCurrentBlock(false).then(async (block) => {
-
-      let txNum = 0;
-      var maxTxNum = 20;
-      if (this.state.txHashArr.length > 0) {
-        txNum = this.state.txHashArr.length;
-        if (txNum + block.transactions.length > maxTxNum) {
-          const leftNum = txNum + block.transactions.length - maxTxNum;
-          this.state.txHashArr = this.state.txHashArr.slice(0, txNum - leftNum);
-        }
-        this.state.txHashArr = [...block.transactions, ...this.state.txHashArr];
-      } else {
-        var curHeight = block.number;
-        var maxLookbackNum = 20;
-        
-        for (var height = curHeight - 1; height > curHeight - maxLookbackNum && height > 0; height--) {
-          if (txNum >= maxTxNum) {
-            console.log('get tx from block:' + height + '~' + curHeight);
-            break;
-          }
-          
-          if (this.state.savedBlockNumbers[height]) break;
-          this.state.savedBlockNumbers[block.number] = true;
-          const blockInfo = await oexchain.oex.getBlockByNum(height, false);
-          if (blockInfo == null || blockInfo.transactions == null) {
-            continue;
-          }
-          for (let txHash of blockInfo.transactions) {
-            this.state.txHashArr.push(txHash);
-            txNum++;
-            if (txNum >= maxTxNum) {
-              break;
-            }
-          }
-        }
-      }
-      
-      this.setState({txFrom: { txHashArr: this.state.txHashArr, maxTxNum, fromHomePage: true }});
-    });
-  }
-
   render() {
+    console.log('2: tx num = ' + this.state.txFrom.txHashArr.length);
     return (
       <div className="progress-table">
         <TransactionList txFrom={this.state.txFrom}/>

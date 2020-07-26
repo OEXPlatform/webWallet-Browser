@@ -27,6 +27,7 @@ export default class TransactionList extends Component {
       innerTxInfos: [],
       maxTxNum: 0,
       homePage: (props.txFrom != null && props.txFrom.fromHomePage) ? true : false,
+      cachedTxInfo: {},
     };
   }
 
@@ -55,7 +56,11 @@ export default class TransactionList extends Component {
   }
 
   getTxInfoByTxHash(txHashArr) {
+    console.log('3: tx num = ' + txHashArr.length);
     let txPromiseArr = [];
+    // for (let i = 0; i < txHashArr.length; i++) {
+
+    // }
     txHashArr.map(txHash => {
       if (this.state.txHashSet[txHash] == null) {
         txPromiseArr.push(oexchain.oex.getTransactionByHash(txHash));
