@@ -133,7 +133,8 @@ export default class TransactionList extends Component {
             this.state.transactions = this.state.transactions.slice(0, this.state.transactions.length - (txNum - this.state.maxTxNum));
           }
         } 
-        _this.setState({ transactions: [...transactions, ...this.state.transactions] });
+        //_this.setState({ transactions: [...transactions, ...this.state.transactions] });
+        _this.setState({ transactions });
       });
     }
   }
