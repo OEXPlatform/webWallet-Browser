@@ -68,7 +68,7 @@ export default class TransactionList extends Component {
       }
     });
     const txInfos = await Promise.all(txPromiseArr);
-    this.processTxs(txInfos);
+    await this.processTxs(txInfos);
   }
 
   processTxs = async (txInfos) => {
@@ -88,7 +88,8 @@ export default class TransactionList extends Component {
     }
     const dposInfo = await oexchain.dpos.getDposInfo();
     if (receiptPromiseArr.length > 0) {
-      Promise.all(receiptPromiseArr).then(async (receipts) => {
+      const receipts = await Promise.all(receiptPromiseArr);
+      //Promise.all(receiptPromiseArr).then(async (receipts) => {
         for (const receipt of receipts) {
           if (receipt == null) continue;
           let i = 0;
@@ -140,7 +141,7 @@ export default class TransactionList extends Component {
         }
 
         _this.setState({ transactions });
-      });
+      //});
     }
   }
 
