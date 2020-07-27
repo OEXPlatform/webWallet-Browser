@@ -579,16 +579,16 @@ async function checkURC20(contractAccountName) {
 }
 
 function trace (count) {
-  var caller = arguments.callee.caller;
-  var i = 0;
-  count = count || 10;
-  const traceLog = [];
-  while (caller && i < count) {
-      traceLog.push(caller.toString());
-      caller = caller.caller;
-      i++;
-  }
-  console.log(traceLog);
+  // var caller = trace.caller;
+  // var i = 0;
+  // count = count || 10;
+  // const traceLog = [];
+  // while (caller && i < count) {
+  //     traceLog.push(caller.toString());
+  //     caller = caller.caller;
+  //     i++;
+  // }
+  // console.log(traceLog);
 }
 
 export { getFlatMenuData, getRouterData, formatterMenuData, hex2Bytes, bytes2Hex, str2Bytes, str2Hex,
