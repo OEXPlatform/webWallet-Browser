@@ -32,6 +32,7 @@ export default class TransactionList extends Component {
   }
 
   componentDidMount() {
+    console.log('componentDidMount');
     oexchain.account.getAssetInfoById(0).then(assetInfo => {
       this.state.assetInfos[0] = assetInfo;
     });
