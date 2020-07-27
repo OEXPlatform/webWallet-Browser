@@ -1,6 +1,5 @@
 /* eslint no-mixed-operators:0 */
 import React, { Component } from 'react';
-import * as oexchain from 'oex-web3';
 
 import TransactionList from '../../../../TransactionList';
 import eventProxy from '../../../../utils/eventProxy';
@@ -12,26 +11,32 @@ export default class TransactionsTable extends Component {
     super(props);
 
     this.state = {
+      blockHashSet: {},
+      txHashSet: {},
+      maxTxNum: 13,
       txHashArr: [],
       current: 1,
       assetInfos: {},
       txFrom: { txHashArr: [], maxTxNum: 0, fromHomePage: true },
       intervalId: 0,
+      transactions: [],
     };
   }
 
   componentDidMount() {
     eventProxy.on('updateBlocks', (blocks) => {
-      const maxTxNum = 13;
       let txHashArr = [];
       for (let i = 0; i < blocks.length; i++) {
-        txHashArr.push(...blocks[i].transactions);
-        if (txHashArr.length > maxTxNum) {
-          txHashArr = txHashArr.slice(0, maxTxNum);
-          break;
+        if (this.state.blockHashSet[blocks[i].number] == null) {
+          txHashArr.push(...blocks[i].transactions);
+          this.state.blockHashSet[blocks[i].number] = 1;
+          if (txHashArr.length > this.state.maxTxNum) {
+            txHashArr = txHashArr.slice(0, this.state.maxTxNum);
+            break;
+          }
         }
       }
-      this.setState({txFrom: { txHashArr, maxTxNum, fromHomePage: true }});
+      this.setState({txFrom: { txHashArr, maxTxNum: this.state.maxTxNum, fromHomePage: true }});
     });
   }
 

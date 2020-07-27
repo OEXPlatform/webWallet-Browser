@@ -21,6 +21,7 @@ export default class BlocksTable extends Component {
     super(props);
 
     this.state = {
+      maxBlockNum: 17,
       blockList: [],
       intervalId: 0,
       blockListVisible: false,
@@ -53,7 +54,7 @@ export default class BlocksTable extends Component {
       let nextBlockNum = block.number - 1;
       let count = 1;
       const len = this.state.blockList.length;
-      for (let i = 0; count < 18; i++, nextBlockNum--, count++) {
+      for (let i = 0; count < this.state.maxBlockNum; i++, nextBlockNum--, count++) {
         if (i < len && this.state.blockList[i].number == nextBlockNum) {
           blockList.push(this.state.blockList[i]);
           continue;
@@ -101,10 +102,13 @@ export default class BlocksTable extends Component {
     const localTime = utils.getValidTime(record.timestamp);
     return (<div>
         <div>
-          {T('矿工') + ' '}<font style={{color: '#5c67f2'}}>{record.miner}</font>
+          {T('出块时间 ')}{localTime}
         </div>
         <div>
-          <font style={{color: '#5c67f2'}}>{record.txn}{T('条交易')}</font>{T('发生于')}{localTime}
+          {T('矿工 ') + ' '}<font style={{color: '#5c67f2'}}>{record.miner}</font>
+        </div>
+        <div>
+        {T('交易量 ') + ' '}<font style={{color: '#5c67f2'}}>{record.txn}{T('条')}</font>
         </div>
       </div>);
   }
@@ -137,8 +141,9 @@ export default class BlocksTable extends Component {
             <Table.Column title={T("区块大小(B)")} dataIndex="size" width={100}/>
             <Table.Column title={T("生产者")} dataIndex="miner" width={100} /> */}
           </Table>
+          
           <Button type='primary' 
-                  style={{width: '100%', height: '40px', background: 'rgb(239,240,255)', color: '#5c67f2'}}
+                  style={{width: '100%', height: '40px', marginTop: '5px', background: 'rgb(239,240,255)', color: '#5c67f2'}}
                   onClick={() => {
                     this.setState({blockListVisible: true});
                   }}>

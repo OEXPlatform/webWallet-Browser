@@ -1,7 +1,7 @@
 /* eslint no-mixed-operators:0 */
 import React, { Component } from 'react';
-import { Table, Feedback, Dialog, Button } from '@icedesign/base';
-import { Tag, Balloon } from '@alifd/next';
+import { Feedback, Dialog } from '@icedesign/base';
+import { Table, Tag, Balloon, Button } from '@alifd/next';
 import IceContainer from '@icedesign/container';
 import copy from 'copy-to-clipboard';
 import * as oexchain from 'oex-web3';
@@ -140,7 +140,7 @@ export default class TransactionList extends Component {
           transactions = transactions.slice(0, this.state.maxTxNum);
         }
 
-        _this.setState({ transactions });
+        this.state.transactions = transactions;
       //});
     }
   }
@@ -353,13 +353,13 @@ export default class TransactionList extends Component {
   }
 
   render() {
-    console.log('displayed tx num = ' + this.state.transactions.length);
     return (
       <div className="progress-table">
         {
           this.state.homePage ? 
             <IceContainer  title={T("交易")}>
               <Table primaryKey="txHash" isZebra={false}  hasBorder={false} 
+                //rowProps={{style: {height:'50px'}}} 
                 language={T('zh-cn')} hasHeader={false} 
                 dataSource={this.state.transactions}
               >
@@ -368,6 +368,14 @@ export default class TransactionList extends Component {
                 <Table.Column title={T("交易详情")} dataIndex="parsedActions" width={180} cell={this.renderDetailInfo2.bind(this)}/>
                 <Table.Column title={T("结果")} dataIndex="parsedActions" width={80} cell={this.renderResult2.bind(this)} />
               </Table>
+              
+              <Button type='primary' 
+                      style={{width: '100%', height: '40px', background: 'rgb(239,240,255)', color: '#5c67f2'}}
+                      onClick={() => {
+                        history.push('/Transaction');
+                      }}>
+                {T('查询交易')}
+              </Button>
             </IceContainer>
               :
             <IceContainer className="tab-card" title={T("交易")}>
