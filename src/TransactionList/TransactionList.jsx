@@ -40,7 +40,7 @@ export default class TransactionList extends Component {
       maxTxNum: 0,
       homePage: (props.txFrom != null && props.txFrom.fromHomePage) ? true : false,
       cachedTxInfo: {},
-      isLoading: true,
+      isLoading: false,
     };
   }
 
