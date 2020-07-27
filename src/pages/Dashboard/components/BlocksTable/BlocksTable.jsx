@@ -1,7 +1,7 @@
 /* eslint no-mixed-operators:0 */
 import React, { Component } from 'react';
-import { Table, Progress, Feedback } from '@icedesign/base';
-import { Button, Dialog } from '@alifd/next';
+import { Progress, Feedback } from '@icedesign/base';
+import { Table, Button, Dialog, Loading, Icon } from '@alifd/next';
 import IceContainer from '@icedesign/container';
 import copy from 'copy-to-clipboard';
 import * as oexchain from 'oex-web3';
@@ -13,6 +13,18 @@ import eventProxy from '../../../../utils/eventProxy';
 
 
 const block = require('./images/middle_icon_BK.png');
+const indicator = (
+  <div>
+      <Icon type="loading" />
+  </div>
+);
+
+const CustomLoading = (props) => (
+    <Loading
+        indicator={indicator}
+        {...props}
+    />
+);
 
 export default class BlocksTable extends Component {
   static displayName = 'BlocksTable';
@@ -25,6 +37,7 @@ export default class BlocksTable extends Component {
       blockList: [],
       intervalId: 0,
       blockListVisible: false,
+      isLoading: true,
     };
   }
 
@@ -69,6 +82,7 @@ export default class BlocksTable extends Component {
       eventProxy.trigger('updateBlocks', blockList);
       this.setState({
         blockList: this.state.blockList,
+        isLoading: false,
       });
     });
   }
@@ -126,6 +140,8 @@ export default class BlocksTable extends Component {
       <div className="progress-table">
         <IceContainer className="tab-card" title={T("区块")} >
           <Table hasHeader={false} isZebra={false}  hasBorder={false}
+            isLoading={this.state.isLoading}
+            loadingComponent={CustomLoading}
             dataSource={this.state.blockList}
             primaryKey="number"
             language={T('zh-cn')}

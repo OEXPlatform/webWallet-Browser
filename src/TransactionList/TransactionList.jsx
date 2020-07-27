@@ -1,7 +1,7 @@
 /* eslint no-mixed-operators:0 */
 import React, { Component } from 'react';
 import { Feedback, Dialog } from '@icedesign/base';
-import { Table, Tag, Balloon, Button } from '@alifd/next';
+import { Table, Tag, Balloon, Button, Loading, Icon } from '@alifd/next';
 import IceContainer from '@icedesign/container';
 import copy from 'copy-to-clipboard';
 import * as oexchain from 'oex-web3';
@@ -12,6 +12,18 @@ import { T } from '../utils/lang';
 import * as txParser from '../utils/transactionParser';
 
 const txTag = require('./images/middle_icon_TX.png');
+const indicator = (
+  <div>
+      <Icon type="loading" />
+  </div>
+);
+
+const CustomLoading = (props) => (
+    <Loading
+        indicator={indicator}
+        {...props}
+    />
+);
 export default class TransactionList extends Component {
   static displayName = 'TransactionList';
 
@@ -28,6 +40,7 @@ export default class TransactionList extends Component {
       maxTxNum: 0,
       homePage: (props.txFrom != null && props.txFrom.fromHomePage) ? true : false,
       cachedTxInfo: {},
+      isLoading: true,
     };
   }
 
@@ -141,6 +154,7 @@ export default class TransactionList extends Component {
         }
 
         this.state.transactions = transactions;
+        this.state.isLoading = false;
       //});
     }
   }
@@ -359,7 +373,8 @@ export default class TransactionList extends Component {
           this.state.homePage ? 
             <IceContainer  title={T("交易")}>
               <Table primaryKey="txHash" isZebra={false}  hasBorder={false} 
-                //rowProps={{style: {height:'50px'}}} 
+                isLoading={this.state.isLoading}
+                loadingComponent={CustomLoading}
                 language={T('zh-cn')} hasHeader={false} 
                 dataSource={this.state.transactions}
               >
