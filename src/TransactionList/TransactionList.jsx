@@ -38,6 +38,7 @@ export default class TransactionList extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    console.log(nextProps);
     this.state.homePage = nextProps.txFrom.fromHomePage;
     if (nextProps.txFrom.maxTxNum != null) {
       this.state.maxTxNum = nextProps.txFrom.maxTxNum;
@@ -56,7 +57,6 @@ export default class TransactionList extends Component {
   }
 
   getTxInfoByTxHash(txHashArr) {
-    console.log('3: tx num = ' + txHashArr.length);
     let txPromiseArr = [];
     // for (let i = 0; i < txHashArr.length; i++) {
 
@@ -352,7 +352,7 @@ export default class TransactionList extends Component {
   }
 
   render() {
-    console.log('4:tx num = ' + this.state.transactions.length);
+    console.log('displayed tx num = ' + this.state.transactions.length);
     return (
       <div className="progress-table">
         {

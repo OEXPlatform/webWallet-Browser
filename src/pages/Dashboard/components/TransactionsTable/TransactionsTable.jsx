@@ -31,7 +31,6 @@ export default class TransactionsTable extends Component {
           break;
         }
       }
-      console.log('1: tx num = ' + txHashArr.length);
       this.setState({txFrom: { txHashArr, maxTxNum, fromHomePage: true }});
     });
   }
@@ -41,7 +40,6 @@ export default class TransactionsTable extends Component {
   }
 
   render() {
-    console.log('2: tx num = ' + this.state.txFrom.txHashArr.length);
     return (
       <div className="progress-table">
         <TransactionList txFrom={this.state.txFrom}/>
