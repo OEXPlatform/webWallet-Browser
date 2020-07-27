@@ -578,9 +578,23 @@ async function checkURC20(contractAccountName) {
   return true;
 }
 
+function trace (count) {
+  var caller = arguments.callee.caller;
+  var i = 0;
+  count = count || 10;
+  const traceLog = [];
+  while (caller && i < count) {
+      traceLog.push(caller.toString());
+      caller = caller.caller;
+      i++;
+  }
+  console.log(traceLog);
+}
+
 export { getFlatMenuData, getRouterData, formatterMenuData, hex2Bytes, bytes2Hex, str2Bytes, str2Hex,
          saveTxHash, saveTxBothFromAndTo, bytes2Number, deepClone, parsePrivateKey, checkPassword, 
          isEmptyObj, getPublicKeyWithPrefix, utf8ByteToUnicodeStr, getDataFromFile, storeDataToFile, 
          removeDataFromFile, loadKeystoreFromLS, loadAccountsFromLS, getReadableNumber, confuseInfo, 
          getGasEarned, getValidTime, checkIpVaild, getDuration, guid, getRandomInt, getSpanTime,
-         getValidKeystores, storeContractABI, getContractABI, parseResult, checkPrefix, isEqualAddress, checkURC20 };
+         getValidKeystores, storeContractABI, getContractABI, parseResult, checkPrefix, isEqualAddress, checkURC20,
+         trace };

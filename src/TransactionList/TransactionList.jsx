@@ -352,6 +352,7 @@ export default class TransactionList extends Component {
   }
 
   render() {
+    utils.trace(5);
     console.log('displayed tx num = ' + this.state.transactions.length);
     return (
       <div className="progress-table">
