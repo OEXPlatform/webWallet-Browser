@@ -38,7 +38,7 @@ export default class TransactionList extends Component {
     });
   }
 
-  componentWillReceiveProps(nextProps) {
+  async componentWillReceiveProps(nextProps) {
     console.log(nextProps);
     this.state.homePage = nextProps.txFrom.fromHomePage;
     if (nextProps.txFrom.maxTxNum != null) {
@@ -47,7 +47,7 @@ export default class TransactionList extends Component {
     if (nextProps.txFrom.blockHeight != null) {
       this.getTxInfoByBlock(nextProps.txFrom.blockHeight);
     } else if (nextProps.txFrom.txHashArr != null) {
-      this.getTxInfoByTxHash(nextProps.txFrom.txHashArr);
+      await this.getTxInfoByTxHash(nextProps.txFrom.txHashArr);
     }
   }
 
@@ -352,7 +352,6 @@ export default class TransactionList extends Component {
   }
 
   render() {
-    utils.trace(5);
     console.log('displayed tx num = ' + this.state.transactions.length);
     return (
       <div className="progress-table">
