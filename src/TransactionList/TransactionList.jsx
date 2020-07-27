@@ -56,7 +56,7 @@ export default class TransactionList extends Component {
     });
   }
 
-  getTxInfoByTxHash(txHashArr) {
+  getTxInfoByTxHash = async (txHashArr) => {
     let txPromiseArr = [];
     // for (let i = 0; i < txHashArr.length; i++) {
 
@@ -66,9 +66,8 @@ export default class TransactionList extends Component {
         txPromiseArr.push(oexchain.oex.getTransactionByHash(txHash));
       }
     });
-    Promise.all(txPromiseArr).then(txInfos => {
-      this.processTxs(txInfos);
-    })
+    const txInfos = await Promise.all(txPromiseArr);
+    this.processTxs(txInfos);
   }
 
   processTxs = async (txInfos) => {
