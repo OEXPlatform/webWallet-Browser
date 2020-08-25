@@ -11,6 +11,7 @@ import copy from 'copy-to-clipboard';
 import cookie from 'react-cookies';
 import * as Constant from '../../utils/constant';
 import * as utils from '../../utils/utils';
+import { T } from '../../utils/lang';
 
 const txTypes = [{ value: Constant.TRANSFER, label: '转账'},{value: Constant.CREATE_CONTRACT,label: '创建合约'},
                 { value: Constant.CREATE_NEW_ACCOUNT, label: '创建账户' },{ value: Constant.UPDATE_ACCOUNT, label: '更新账户'},
@@ -1280,6 +1281,10 @@ export default class RawTxConstructor extends Component {
         /> */}
       </div>
     );
+  }
+
+  handleAccountPrefixChange = (v) => {
+    this.state.accountPrefix = v;
   }
 
   handleSignPrivateKeyChange = (v) => {

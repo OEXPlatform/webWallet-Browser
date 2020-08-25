@@ -114,12 +114,14 @@ export default class BlocksTable extends Component {
 
   renderBlockInfo = (value, index, record) => {
     const localTime = utils.getValidTime(record.timestamp);
+    const reward = utils.getReadableNumber(record.reward, 18);
     return (<div>
         <div>
           {T('出块时间 ')}{localTime}
         </div>
         <div>
           {T('矿工 ') + ' '}<font style={{color: '#5c67f2'}}>{record.miner}</font>
+          {T(' 区块奖励 ') + ' '}<font style={{color: '#5c67f2'}}>{reward} OEX</font>
         </div>
         <div>
         {T('交易量 ') + ' '}<font style={{color: '#5c67f2'}}>{record.txn}{T('条')}</font>

@@ -34,7 +34,7 @@ if (nodeInfo != null && nodeInfo !== '') {
   axios.defaults.baseURL = nodeInfo;
   oexchain.utils.setProvider(nodeInfo);
 } else {
-  nodeInfo = 'https://' + window.location.host + ':8081';
+  nodeInfo = 'https://' + window.location.host + (window.location.host.indexOf(':') > 0 ? '' : ':8081');
   cookie.save('nodeInfo', nodeInfo, {path: '/', maxAge: 3600 * 24 * 360});
   oexchain.utils.setProvider(nodeInfo);
 }

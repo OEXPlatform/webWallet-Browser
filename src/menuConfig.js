@@ -5,7 +5,7 @@ import { T } from './utils/lang'
 
 const headerMenuConfig = [
   {
-    name: T('实时数据'),
+    name: T('链上数据'),
     path: '/dashboard',
     icon: 'search',
   },
@@ -25,12 +25,12 @@ const headerMenuConfig = [
     icon: 'ul-list'
   },
   {
-    name: T('合约开发'),
+    name: T('合约开发工具'),
     path: '/contractDev',
     icon: 'code',
   },
   {
-    name: T('矿工'),
+    name: T('节点矿工/投票'),
     path: '/producerList',
     icon: 'repair',
   },
