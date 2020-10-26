@@ -385,7 +385,8 @@ export default class AccountList extends Component {
       if (txInfo.blockStatus == null || txInfo.blockStatus == Constant.BlockStatus.Reversible || txInfo.blockStatus == Constant.BlockStatus.Unknown) {
         if (this.state.blockRollbackCache[txInfo.blockHash] == null) {
           const blockInfo = await oexchain.oex.getBlockByNum(txInfo.blockNumber);
-          this.state.blockRollbackCache[txInfo.blockHash] = blockInfo.hash != txInfo.blockHash;
+          if (blockInfo != null)
+            this.state.blockRollbackCache[txInfo.blockHash] = blockInfo.hash != txInfo.blockHash;
         }
         if (this.state.blockRollbackCache[txInfo.blockHash]) {
           txInfo.blockStatus = Constant.BlockStatus.Rollbacked;
@@ -840,6 +841,7 @@ export default class AccountList extends Component {
       payload };
     this.showTxSendDialog(this.state.txInfo);
   }
+  
   withdrawTxFee = (index) => {
     this.setState({ withdrawTxFeeVisible: true, curAccount: this.state.accountInfos[index] });
   }
@@ -1022,6 +1024,18 @@ export default class AccountList extends Component {
   }
 
   addAccountBySelf = () => {
+    // console.log("start test...");
+    // const actionInfo = {accountName:'oexchain.founder', toAccountName:'oexchainofficial', assetId: 0, amount: new BigNumber(1).shiftedBy(18), remark: ""};
+    // const gasInfo = {gasPrice: '0x' + new BigNumber(200).toString(16), gasLimit: '0x' + new BigNumber(1000000).toString(16)};
+    // const privateKey = "0x14d0a9b88cbb8420463032aa75dd92ebbc7c2f32dcdf1e072cf6fa88e2a7ffd7";
+    // oexchain.action.transfer(actionInfo, gasInfo, privateKey).then(txHash => {
+    //     console.log(txHash);
+    // }).catch(error => {
+    //   console.log(error);
+    //   Feedback.toast.error(error);
+    // });
+    // console.log("finish test...");
+
     this.state.accountNames = [];
     this.state.accountInfos.map(account => this.state.accountNames.push(account.accountName));
     if (this.state.accountNames.length == 0) {      

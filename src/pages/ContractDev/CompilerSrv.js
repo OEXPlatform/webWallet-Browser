@@ -1,4 +1,4 @@
-const compileSrvAddr = "http://sol0425Srv.xchainunion.com";
+const compileSrvAddr = "http://solCompiler.xchainunion.com";
 const chainName = 'oexchain';
 const userFilePath = "/solidity/";
 const libFilePath = "/libsList/?" + chainName;
@@ -6,6 +6,7 @@ const sampleFilePath = "/sampleCodeList/?" + chainName;
 let userFileAddr = compileSrvAddr + userFilePath;
 let libFileAddr = compileSrvAddr + libFilePath;
 let sampleFileAddr = compileSrvAddr + sampleFilePath;
+let oexCompilerVer = "v0.4.25-oex";
 
 const  OpSolType = {
 	AddSol: 0,
@@ -43,7 +44,8 @@ export function addSol(accountName, solFileName) {
     sharedAccountName: '',
     solFileName: solFileName,
     newSolFileName: "",
-    solFileContent: ""});
+    solFileContent: "",
+    solVersion: ""});
   fetch(userFileAddr, 
         {headers: { "Content-Type": "application/json" }, method: 'POST', body: dataToSrv})
   .then(resp => {
@@ -58,7 +60,8 @@ export function delSol(accountName, solFileName) {
     sharedAccountName: '',
     solFileName: solFileName,
     newSolFileName: "",
-    solFileContent: ""});
+    solFileContent: "",
+    solVersion: ""});
   fetch(userFileAddr, 
         {headers: { "Content-Type": "application/json" }, method: 'POST', body: dataToSrv})
   .then(resp => {
@@ -73,7 +76,8 @@ export function updateSol(accountName, solFileName, solFileContent) {
     sharedAccountName: '',
     solFileName: solFileName,
     newSolFileName: "",
-    solFileContent: solFileContent});
+    solFileContent: solFileContent,
+    solVersion: ""});
   fetch(userFileAddr, 
         {headers: { "Content-Type": "application/json" }, method: 'POST', body: dataToSrv})
   .then(resp => {
@@ -88,7 +92,8 @@ export async function listSol(accountName) {
     sharedAccountName: '',
     solFileName: "",
     newSolFileName: "",
-    solFileContent: ""});
+    solFileContent: "",
+    solVersion: ""});
   let resp = await fetch(userFileAddr, 
         {headers: { "Content-Type": "application/json" }, method: 'POST', body: dataToSrv});
   resp = await resp.json();
@@ -103,7 +108,8 @@ export function renameSol(accountName, solFileName, newSolFileName) {
     sharedAccountName: '',
     solFileName: solFileName,
     newSolFileName: newSolFileName,
-    solFileContent: ""});
+    solFileContent: "",
+    solVersion: ""});
   fetch(userFileAddr, 
         {headers: { "Content-Type": "application/json" }, method: 'POST', body: dataToSrv})
   .then(resp => {
@@ -118,7 +124,8 @@ export async function compileSol(accountName, solFileName) {
     sharedAccountName: '',
     solFileName: solFileName,
     newSolFileName: "",
-    solFileContent: ""});
+    solFileContent: "",
+    solVersion: oexCompilerVer});
   let resp = await fetch(userFileAddr, 
       {headers: { "Content-Type": "application/json" }, method: 'POST', body: dataToSrv});
   resp = await resp.json();
@@ -133,7 +140,8 @@ export async function listSharedSol(accountName, sharedAccountName) {
     sharedAccountName: sharedAccountName,
     solFileName: solFileName,
     newSolFileName: "",
-    solFileContent: ""});
+    solFileContent: "",
+    solVersion: ""});
   let resp = await fetch(userFileAddr, 
       {headers: { "Content-Type": "application/json" }, method: 'POST', body: dataToSrv});
   resp = await resp.json();
@@ -148,7 +156,8 @@ export async function getSharedSol(accountName, sharedAccountName, solFileName) 
     sharedAccountName: sharedAccountName,
     solFileName: solFileName,
     newSolFileName: "",
-    solFileContent: ""});
+    solFileContent: "",
+    solVersion: ""});
   let resp = await fetch(userFileAddr, 
       {headers: { "Content-Type": "application/json" }, method: 'POST', body: dataToSrv});
   resp = await resp.json();

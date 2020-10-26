@@ -50,6 +50,7 @@ const Transfer = ({self, contractName, funcName}) => {
         style={{ ...styles.inputBoder, width: 600 }}
         innerBefore={T('转账资产ID')}
         size="medium"
+        placeholder="多笔资产请用英文逗号分隔，跟资产金额需一一对应，如：0,1,10"
       />
       <br />
       <br />
@@ -58,6 +59,7 @@ const Transfer = ({self, contractName, funcName}) => {
         style={{ ...styles.inputBoder, width: 600 }}
         innerBefore={T('转账资产金额')}
         size="medium"
+        placeholder="多笔资产金额请用英文逗号分隔，跟资产ID需一一对应，如：100,10,1"
       />
     </Container>
   </div>
@@ -283,6 +285,7 @@ export default class ContractManager extends Component {
       ftAmount: 10,      
       createAccountVisible: false,
       shareCodeContract: {},
+      chainConfig: null,
      };
      const solFileList = global.localStorage.getItem('solFileList');
      if (solFileList != null) {
@@ -314,8 +317,8 @@ export default class ContractManager extends Component {
   }
 
   componentDidMount = async () => {
-    const chainConfig = await oexchain.oex.getChainConfig();
-    oexchain.oex.setChainId(chainConfig.chainId);
+    this.state.chainConfig = await oexchain.oex.getChainConfig();
+    oexchain.oex.setChainId(this.state.chainConfig.chainId);
 
     const keystoreList = utils.loadKeystoreFromLS();
     if (keystoreList != null) {
@@ -715,7 +718,9 @@ export default class ContractManager extends Component {
         index++;
       }
       const self = this;
-      const payload = '0x' + oexchain.utils.getContractPayload(funcName, this.state.funcParaTypes[contractName][funcName], values);
+      const assetAmountMap = {};
+      assetAmountMap[this.state.chainConfig.SysTokenId] = '0';
+      let payload = '0x' + oexchain.utils.getContractPayload(funcName, this.state.funcParaTypes[contractName][funcName], values);
       if (this.state.funcParaConstant[contractName][funcName]) {
         const callInfo = {actionType:0, from: 'oexchain.founder', to: contractAccountName, assetId:0, gas:200000000, gasPrice:10000000000, value:0, data:payload, remark:''};
         oexchain.oex.call(callInfo, 'latest').then(resp => {
@@ -725,12 +730,66 @@ export default class ContractManager extends Component {
           self.setState({ result: self.state.result, txSendVisible: false });
         });
       } else {
-        const assetId = this.state.transferTogether[contractName + funcName] ? parseInt(this.state.paraValue[contractName + '-' + funcName + '-transferAssetId']) : 0;
-        const amount = this.state.transferTogether[contractName + funcName] ? parseInt(this.state.paraValue[contractName + '-' + funcName + '-transferAssetValue']) : 0;
+        let assetIds = [0];
+        let amounts = [0];        
+        if (this.state.transferTogether[contractName + funcName]) {
+          assetIds = this.state.paraValue[contractName + '-' + funcName + '-transferAssetId'];
+          amounts = this.state.paraValue[contractName + '-' + funcName + '-transferAssetValue'];      
+          if (utils.isEmptyObj(assetIds) || utils.isEmptyObj(amounts)) {
+            Feedback.toast.error(T('请输入要转移给合约的资产及其金额'));
+            return;
+          }
+          assetIds = assetIds.trim().split(',');
+          amounts = amounts.trim().split(',');
+          for (let i = 0; i < assetIds.length; i++) {
+            const assetId = assetIds[i].trim();
+            const amount = amounts[i].trim();
+            if (utils.isEmptyObj(assetId) || utils.isEmptyObj(amount)) {
+              Feedback.toast.error(T('资产ID和金额不能为空，请检查输入是否正确'));
+              return;
+            }
+            if (assetAmountMap[assetId] != null) {
+              Feedback.toast.error(T('输入的资产不可重复，请检查输入'));
+              return;
+            }
+            assetAmountMap[assetId] = amount;
+          }
+        }
+        let oexAmount = assetAmountMap[this.state.chainConfig.SysTokenId];
+        if (!utils.isEmptyObj(oexAmount)) {
+          oexAmount = parseInt(oexAmount);
+        }
+
+        // 如果用户只转一种资产，无论是何种资产，都放到action里
+        // 如果用户转多种资产，当资产中有OEX的时候，将OEX放入action，其它资产放到payload里，
+        //                  否则将所有资产都放入payload里
+        let actionAssetId = 0;
+        let actionAmount = 0;
+        if (assetIds.length == 1) {   // 只转一种币
+          actionAssetId = assetIds[0];
+          actionAmount = amounts[0];
+        } else {   // 转多种币
+            const extraAssetInfo = [];
+            if (assetAmountMap[this.state.chainConfig.SysTokenId] != null) {  // 带有平台币的情况
+              actionAssetId = this.state.chainConfig.SysTokenId;
+              actionAmount = assetAmountMap[this.state.chainConfig.SysTokenId];
+              assetIds.map((assetId, i) => {
+                if (assetId != this.state.chainConfig.SysTokenId) {
+                  extraAssetInfo.push({assetId, amount: amounts[i]});
+                }
+              });
+            } else {  // 不带平台币的情况
+              assetIds.map((assetId, i) => {
+                extraAssetInfo.push({assetId, amount: amounts[i]});
+              });
+            }
+            payload = '0x' + encode([...extraAssetInfo, payload]).toString('hex');
+        }
+        
         this.state.txInfo = { actionType: Constant.CALL_CONTRACT,
           toAccountName: contractAccountName,
-          assetId,
-          amount,
+          assetId: this.state.chainConfig.SysTokenId,
+          amount: oexAmount,
           payload };
         this.setState({ txSendVisible: true, curContractName: contractName, curCallFuncName: funcName });
       }

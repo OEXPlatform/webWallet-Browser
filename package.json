@@ -30,6 +30,7 @@
     "ethereumjs-util": "^6.1.0",
     "ethers": "^4.0.27",
     "foundation-symbol": "^0.1.0",
+    "graceful-fs": "4.2.2",
     "history": "^4.7.2",
     "hoist-non-react-statics": "^2.5.5",
     "invariant": "^2.2.4",
@@ -41,7 +42,7 @@
     "monaco-editor": "^0.16.0",
     "monaco-editor-webpack-plugin": "^1.7.0",
     "natives": "^1.1.6",
-    "oex-web3": "^1.1.0",
+    "oex-web3": "^1.1.3",
     "path-to-regexp": "^2.2.1",
     "prop-types": "^15.6.2",
     "react": "^16.6.1",
@@ -59,8 +60,7 @@
     "redux": "3.6.0",
     "redux-thunk": "^2.3.0",
     "rlp": "^2.2.2",
-    "solc": "^0.5.6",
-    "graceful-fs": "4.2.2"
+    "solc": "^0.5.6"
   },
   "devDependencies": {
     "babel-eslint": "^8.0.3",

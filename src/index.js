@@ -29,6 +29,8 @@ const ICE_CONTAINER = document.getElementById('ice-container');
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 axios.defaults.baseURL = constant.testNetRPCHttpsAddr;
 
+
+//oexchain.utils.setProvider("http://8.210.200.219:8080");
 let nodeInfo = cookie.load('nodeInfo');
 if (nodeInfo != null && nodeInfo !== '') {
   axios.defaults.baseURL = nodeInfo;
